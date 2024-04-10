@@ -688,10 +688,14 @@ local function set_autocmds()
 end
 
 M.disable = function(force)
-    if not vim.g.gitblame_enabled and not force then
+    if not vim.g.gitblame_enabled and force then
+        -- if gitblame is not enabled (vim.g.gitblame_enabled = false)
+        -- also if user force to disable (when force = true, force to disable [what I understand])
+        -- we don't have to do anything, should goes in this block
         return
     end
 
+    -- else need to disable gitblame
     vim.g.gitblame_enabled = false
     pcall(vim.api.nvim_del_augroup_by_name, "gitblame")
     clear_all_extmarks()
@@ -750,14 +754,19 @@ end
 
 ---@param opts SetupOptions?
 M.setup = function(opts)
+    -- TODO: when toggle/enable/diable blame, not event goes in the setup function
+    print("in gitblame setup...")
     require("gitblame.config").setup(opts)
 
     create_cmds()
 
+    print("setting up enable/disable behavior...")
     if vim.g.gitblame_enabled == 1 or vim.g.gitblame_enabled == true then
+        print("gitblame enabled")
         init()
         set_autocmds()
     else
+        print("gitblame disabled")
         M.disable(true)
     end
 end
