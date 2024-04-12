@@ -754,19 +754,14 @@ end
 
 ---@param opts SetupOptions?
 M.setup = function(opts)
-    -- TODO: when toggle/enable/diable blame, not event goes in the setup function
-    print("in gitblame setup...")
     require("gitblame.config").setup(opts)
 
     create_cmds()
 
-    print("setting up enable/disable behavior...")
     if vim.g.gitblame_enabled == 1 or vim.g.gitblame_enabled == true then
-        print("gitblame enabled")
         init()
         set_autocmds()
     else
-        print("gitblame disabled")
         M.disable(true)
     end
 end
